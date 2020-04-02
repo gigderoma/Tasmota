@@ -109,7 +109,7 @@ typedef union {                            // Restricted by MISRA-C Rule 18.4 bu
     uint32_t powered_off_led : 1;          // bit 5 (v8.1.0.9)   - SetOption87 - PWM Dimmer Turn red LED on when powered off
     uint32_t remote_device_mode : 1;       // bit 6 (v8.1.0.9)   - SetOption88 - PWM Dimmer Buttons control remote devices
     uint32_t zigbee_distinct_topics : 1;   // bit 7 (v8.1.0.10)  - SetOption89 - Distinct MQTT topics per device for Zigbee (#7835)
-    uint32_t only_json_message : 1;        // bit 8 (v8.2.0.3)   - SetOption90 - Disable non-json MQTT response
+    uint32_t spare08 : 1;
     uint32_t spare09 : 1;
     uint32_t spare10 : 1;
     uint32_t spare11 : 1;
@@ -192,6 +192,7 @@ typedef union {
     uint16_t int_report_defer : 4;          // Number of interrupts to ignore until reporting (default 0, max 15)
     uint16_t int_count_en : 1;              // Enable interrupt counter for this pin
     uint16_t int_retain_flag : 1;           // Report if interrupt occured for pin in next teleperiod
+    uint16_t spare12 : 1;
     uint16_t spare13 : 1;
     uint16_t spare14 : 1;
     uint16_t spare15 : 1;
@@ -205,7 +206,8 @@ typedef union {
     uint8_t spare1 : 1;
     uint8_t spare2 : 1;
     uint8_t spare3 : 1;
-    uint8_t bh1750_resolution : 2;         // Sensor10 1,2,3
+    uint8_t spare4 : 1;
+    uint8_t spare5 : 1;
     uint8_t hx711_json_weight_change : 1;  // Sensor34 8,x - Enable JSON message on weight change
     uint8_t mhz19b_abc_disable : 1;        // Disable ABC (Automatic Baseline Correction for MHZ19(B) (0 = Enabled (default), 1 = Disabled with Sensor15 command)
   };
@@ -396,10 +398,7 @@ struct SYSCFG {
   uint16_t      mcp230xx_int_timer;        // 718
   uint8_t       rgbwwTable[5];             // 71A
   uint8_t       user_template_base;        // 71F
-
-  char          user_template_name[15];    // 720  15 bytes - Backward compatibility since v8.2.0.3
-
-  mytmplt       user_template;             // 72F  14 bytes
+  mytmplt       user_template;             // 720  29 bytes
   uint8_t       novasds_startingoffset;    // 73D
   uint8_t       web_color[18][3];          // 73E
   uint16_t      display_width;             // 774
@@ -471,10 +470,8 @@ struct SYSCFG {
   uint8_t       bri_preset_high;           // F07
   int8_t        hum_comp;                  // F08
 
-  uint8_t       free_f09[175];             // F09
+  uint8_t       free_f09[179];             // F09
 
-  uint16_t      pulse_counter_debounce_low;  // FB8
-  uint16_t      pulse_counter_debounce_high; // FBA
   uint32_t      keeloq_master_msb;         // FBC
   uint32_t      keeloq_master_lsb;         // FC0
   uint32_t      keeloq_serial;             // FC4
