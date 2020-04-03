@@ -412,7 +412,7 @@ struct SYSCFG {
   Mcp230xx0Cfg  mcp230xx0_config[16];       // 6F6
   uint8_t       mcp230xx0_int_prio;         // 716
   Mcp230xx1Cfg  mcp230xx1_config[16];       // 6F6
-  uint8_t       mcp230xx0_int_prio;         // 716
+  uint8_t       mcp230xx1_int_prio;         // 716
   SensorCfg1    SensorBits1;               // 717  On/Off settings used by Sensor Commands
   uint16_t      mcp230xx0_int_timer;        // 718
   uint16_t      mcp230xx1_int_timer;        // 718
