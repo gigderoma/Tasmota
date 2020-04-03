@@ -196,7 +196,25 @@ typedef union {
     uint16_t spare14 : 1;
     uint16_t spare15 : 1;
   };
-} Mcp230xxCfg;
+} Mcp230xx0Cfg;
+
+typedef union {
+  uint16_t data;
+  struct {
+    uint16_t pinmode : 3;                   // Pin mode (1 through 6)
+    uint16_t pullup : 1;                    // Enable internal weak pull-up resistor
+    uint16_t saved_state : 1;               // Save output state, if used.
+    uint16_t int_report_mode : 2;           // Interrupt reporting mode 0 = immediate telemetry & event, 1 = immediate event only, 2 = immediate telemetry only
+    uint16_t int_report_defer : 4;          // Number of interrupts to ignore until reporting (default 0, max 15)
+    uint16_t int_count_en : 1;              // Enable interrupt counter for this pin
+    uint16_t int_retain_flag : 1;           // Report if interrupt occured for pin in next teleperiod
+    uint16_t spare13 : 1;
+    uint16_t spare14 : 1;
+    uint16_t spare15 : 1;
+  };
+} Mcp230xx1Cfg;
+
+
 
 typedef union {
   uint8_t data;
@@ -391,10 +409,13 @@ struct SYSCFG {
   uint16_t      knx_CB_addr[MAX_KNX_CB];   // 6CE  (address_t is a uint16_t) x KNX_max_CB
   uint8_t       knx_GA_param[MAX_KNX_GA];  // 6E2  Type of Input (relay changed, button pressed, sensor read <-teleperiod)
   uint8_t       knx_CB_param[MAX_KNX_CB];  // 6EC  Type of Output (set relay, toggle relay, reply sensor value)
-  Mcp230xxCfg   mcp230xx_config[16];       // 6F6
-  uint8_t       mcp230xx_int_prio;         // 716
+  Mcp230xx0Cfg  mcp230xx0_config[16];       // 6F6
+  uint8_t       mcp230xx0_int_prio;         // 716
+  Mcp230xx1Cfg  mcp230xx1_config[16];       // 6F6
+  uint8_t       mcp230xx0_int_prio;         // 716
   SensorCfg1    SensorBits1;               // 717  On/Off settings used by Sensor Commands
-  uint16_t      mcp230xx_int_timer;        // 718
+  uint16_t      mcp230xx0_int_timer;        // 718
+  uint16_t      mcp230xx1_int_timer;        // 718
   uint8_t       rgbwwTable[5];             // 71A
   uint8_t       user_template_base;        // 71F
   mytmplt       user_template;             // 720  29 bytes
