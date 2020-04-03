@@ -137,7 +137,7 @@ const char* IntModeTxt(uint8_t intmo) {
 }
 
 uint8_t MCP230xx0_readGPIO(uint8_t port) {
-  return I2cRead8(USE_MCP230xx00_ADDR, MCP230xx0_GPIO + port);
+  return I2cRead8(USE_MCP230xx0_ADDR, MCP230xx0_GPIO + port);
 }
 
 void MCP230xx0_ApplySettings(void)
@@ -185,11 +185,11 @@ void MCP230xx0_ApplySettings(void)
       }
 #endif // USE_MCP230xx00_OUTPUT
     }
-    I2cWrite8(USE_MCP230xx00_ADDR, MCP230xx0_GPPU+MCP230xx0_port, reg_gppu);
-    I2cWrite8(USE_MCP230xx00_ADDR, MCP230xx0_GPINTEN+MCP230xx0_port, reg_gpinten);
-    I2cWrite8(USE_MCP230xx00_ADDR, MCP230xx0_IODIR+MCP230xx0_port, reg_iodir);
+    I2cWrite8(USE_MCP230xx0_ADDR, MCP230xx0_GPPU+MCP230xx0_port, reg_gppu);
+    I2cWrite8(USE_MCP230xx0_ADDR, MCP230xx0_GPINTEN+MCP230xx0_port, reg_gpinten);
+    I2cWrite8(USE_MCP230xx0_ADDR, MCP230xx0_IODIR+MCP230xx0_port, reg_iodir);
 #ifdef USE_MCP230xx00_OUTPUT
-    I2cWrite8(USE_MCP230xx00_ADDR, MCP230xx0_GPIO+MCP230xx0_port, reg_portpins);
+    I2cWrite8(USE_MCP230xx0_ADDR, MCP230xx0_GPIO+MCP230xx0_port, reg_portpins);
 #endif // USE_MCP230xx00_OUTPUT
   }
   for (uint32_t idx=0;idx<MCP230xx0_pincount;idx++) {
@@ -202,24 +202,24 @@ void MCP230xx0_ApplySettings(void)
 
 void MCP230xx0_Detect(void)
 {
-  if (I2cActive(USE_MCP230xx00_ADDR)) { return; }
+  if (I2cActive(USE_MCP230xx0_ADDR)) { return; }
 
   uint8_t buffer;
 
-  I2cWrite8(USE_MCP230xx00_ADDR, MCP230xx0_IOCON, 0x80); // attempt to set bank mode - this will only work on MCP23017, so its the best way to detect the different chips 23008 vs 23017
-  if (I2cValidRead8(&buffer, USE_MCP230xx00_ADDR, MCP230xx0_IOCON)) {
+  I2cWrite8(USE_MCP230xx0_ADDR, MCP230xx0_IOCON, 0x80); // attempt to set bank mode - this will only work on MCP23017, so its the best way to detect the different chips 23008 vs 23017
+  if (I2cValidRead8(&buffer, USE_MCP230xx0_ADDR, MCP230xx0_IOCON)) {
     if (0x00 == buffer) {
       MCP230xx0_type = 1; // We have a MCP23008
-      I2cSetActiveFound(USE_MCP230xx00_ADDR, "MCP23008");
+      I2cSetActiveFound(USE_MCP230xx0_ADDR, "MCP23008");
       MCP230xx0_pincount = 8;
       MCP230xx0_ApplySettings();
     } else {
       if (0x80 == buffer) {
         MCP230xx0_type = 2; // We have a MCP23017
-        I2cSetActiveFound(USE_MCP230xx00_ADDR, "MCP23017");
+        I2cSetActiveFound(USE_MCP230xx0_ADDR, "MCP23017");
         MCP230xx0_pincount = 16;
         // Reset bank mode to 0
-        I2cWrite8(USE_MCP230xx00_ADDR, MCP230xx0_IOCON, 0x00);
+        I2cWrite8(USE_MCP230xx0_ADDR, MCP230xx0_IOCON, 0x00);
         // Update register locations for MCP23017
         MCP230xx0_GPINTEN        = 0x04;
         MCP230xx0_GPPU           = 0x0C;
@@ -237,9 +237,9 @@ void MCP230xx0_CheckForInterrupt(void) {
   uint8_t MCP230xx0_intcap = 0;
   uint8_t report_int;
   for (uint32_t MCP230xx0_port = 0; MCP230xx0_port < MCP230xx0_type; MCP230xx0_port++) {
-    if (I2cValidRead8(&intf,USE_MCP230xx00_ADDR,MCP230xx0_INTF+MCP230xx0_port)) {
+    if (I2cValidRead8(&intf,USE_MCP230xx0_ADDR,MCP230xx0_INTF+MCP230xx0_port)) {
       if (intf > 0) {
-        if (I2cValidRead8(&MCP230xx0_intcap, USE_MCP230xx00_ADDR, MCP230xx0_INTCAP+MCP230xx0_port)) {
+        if (I2cValidRead8(&MCP230xx0_intcap, USE_MCP230xx0_ADDR, MCP230xx0_INTCAP+MCP230xx0_port)) {
           for (uint32_t intp = 0; intp < 8; intp++) {
             if ((intf >> intp) & 0x01) { // we know which pin caused interrupt
               report_int = 0;
@@ -369,7 +369,7 @@ void MCP230xx0_SetOutPin(uint8_t pin,uint8_t pinstate) {
       portpins ^= (1 << (pin-(port*8)));
     }
   }
-  I2cWrite8(USE_MCP230xx00_ADDR, MCP230xx0_GPIO + port, portpins);
+  I2cWrite8(USE_MCP230xx0_ADDR, MCP230xx0_GPIO + port, portpins);
   if (Settings.flag.save_state) {  // SetOption0 - Save power state and use after restart - Firmware configured to save last known state in settings
     Settings.mcp230xx0_config[pin].saved_state=portpins>>(pin-(port*8))&1;
     Settings.mcp230xx0_config[pin+pinadd].saved_state=portpins>>(pin+pinadd-(port*8))&1;
